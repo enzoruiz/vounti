@@ -1,0 +1,135 @@
+{% extends "master/base.html" %}
+
+{% load static %}
+
+{% block contenido %}
+    <div class="col-md-12">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group col-md-3" align="center">
+                <a href="{% url 'lista_noticias' %}" class="btn btn-primary btn-lg">Cancelar</a>
+            </div>
+            <div class="form-group col-md-6" align="center">
+                <h1>CREAR NOTICIA</h1>
+            </div>
+            <div class="form-group col-md-3" align="center">
+                <button type="submit" name="button" class="btn btn-primary btn-lg">Guardar</button>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>Titulo</label>
+                <input type="text" name="titulo" class="form-control" required>
+            </div>
+            <div class="form-group col-md-4">
+                <label>Imagen</label>
+                <input type="file" name="imagen" id="imagen">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Estado</label>
+                <select class="form-control" name="estado" id="estado" required>
+                    <option value="">Seleccione Estado</option>
+                    {% for estado in estados %}
+                        <option value="{{ estado.id }}">{{ estado.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label>Pais</label>
+                <select class="form-control" name="pais" id="pais" onchange="get_departamentos()" required>
+                    <option value="">Seleccione Pais</option>
+                    {% for codigo, nombre in paises.items %}
+                        <option value="{{ codigo }}">{{ nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Departamento</label>
+                <select class="form-control" name="departamento" id="departamento" onchange="get_provincias()" required>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Provincia</label>
+                <select class="form-control" name="provincia" id="provincia" onchange="get_distritos()" required>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label>Distrito</label>
+                <select class="form-control" name="ubigeo" id="ubigeo" required>
+                </select>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label>Contenido</label><br>
+                <textarea name="contenido" rows="5" cols="155" style="resize:none;" required></textarea>
+            </div>
+        </form>
+    </div>
+{% endblock contenido %}
+
+{% block importJS %}
+    <script type="text/javascript">
+        function get_departamentos(){
+            $.ajax({
+                url: '/noticia/',
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    opcion: 'get_departamentos',
+                    codigo: $('#pais').val()
+                },
+                success: function(data){
+                    $('#departamento').html('');
+                    $('#provincia').html('');
+                    $('#ubigeo').html('');
+                    $.each(data, function(i, item) {
+                        $('#departamento').append('<option value="'+i+'">'+item+'</option>')
+                    });
+                },
+                error:function( ){
+                }
+            });
+        }
+
+        function get_provincias(){
+            $.ajax({
+                url: '/noticia/',
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    opcion: 'get_provincias',
+                    codigo: $('#departamento').val()
+                },
+                success: function(data){
+                    $('#provincia').html('');
+                    $('#ubigeo').html('');
+                    $.each(data, function(i, item) {
+                        $('#provincia').append('<option value="'+i+'">'+item+'</option>')
+                    });
+                },
+                error:function( ){
+                }
+            });
+        }
+
+        function get_distritos(){
+            $.ajax({
+                url: '/noticia/',
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    opcion: 'get_distritos',
+                    codigo: $('#provincia').val()
+                },
+                success: function(data){
+                    $('#ubigeo').html('');
+                    $.each(data, function(i, item) {
+                        $('#ubigeo').append('<option value="'+i+'">'+item+'</option>')
+                    });
+                },
+                error:function( ){
+                }
+            });
+        }
+    </script>
+{% endblock importJS %}

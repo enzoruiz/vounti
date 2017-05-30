@@ -1,0 +1,30 @@
+{% extends "master/base.html" %}
+
+{% load static %}
+
+{% block contenido %}
+    <div class="form-group col-md-12" align="center">
+        <h1>PAGINA</h1>
+    </div>
+    <div class="col-md-12">
+        {% for noticia in noticias %}
+            <div class="row">
+                <div class="col-md-3">
+                    <section>
+                        {{ noticia.noticia.titulo }}
+                    </section>
+                    <section>
+                        FECHA: {{ noticia.fecha|date:"d/m/Y" }}
+                    </section>
+                </div>
+                <div class="col-md-9">
+                    <p>
+                        {{ noticia.noticia.contenido }}
+                    </p>
+                    <a href="{% url 'inicio' %}/{{ noticia.noticia.slug }}">Seguir Leyendo</a>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock contenido %}

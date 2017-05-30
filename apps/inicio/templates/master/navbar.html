@@ -1,0 +1,18 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{% url 'inicio' %}">Vounti</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+              <li><a href="{% url 'lista_noticias' %}">Hola, {{ user.username }}</a></li>
+              <li><a href="{% url 'nueva_password' %}">Cambiar Contraseña</a></li>
+              <li><a href="{% url 'logout' %}">Cerrar Sesion</a></li>
+          {% else %}
+              <li><a href="{% url 'login' %}">INGRESAR</a></li>
+          {% endif %}
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>

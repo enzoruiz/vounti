@@ -1,0 +1,39 @@
+{% extends "master/base.html" %}
+
+{% load static %}
+
+{% block contenido %}
+    <div class="form-group col-md-3" align="center">
+        <a href="{% url 'noticia' %}" class="btn btn-primary btn-lg">CREAR NOTICIA</a>
+    </div>
+    <div class="form-group col-md-6" align="center">
+        <h1>LISTA NOTICIAS</h1>
+    </div>
+    <div class="form-group col-md-3" align="center">
+        <a href="{% url 'inicio' %}" class="btn btn-primary btn-lg">VER PAGINA</a>
+    </div>
+    {% include "master/mensajes.html" %}
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <td>Codigo</td>
+                <td>Titulo</td>
+                <td>Fecha</td>
+                <td>Estado</td>
+                <td>Acciones</td>
+            </tr>
+            {% for noticia in noticias %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ noticia.noticia.titulo }}</td>
+                    <td>{{ noticia.fecha|date:"d/m/Y" }}</td>
+                    <td>{{ noticia.estado.nombre }}</td>
+                    <td>
+                        <a href="{% url 'noticia' %}{{ noticia.noticia.id }}" class="btn btn-primary">Ver</a>
+                        <a href="{% url 'noticia' %}d/{{ noticia.noticia.id }}" class="btn btn-primary">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock contenido %}
